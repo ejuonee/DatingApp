@@ -5,16 +5,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0-preview.5.21301.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.5.21301.9" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.11.1" />
+    <PackageReference Include="Microsoft.TypeScript.Compiler" Version="3.1.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.4.0-beta">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="SQLite" Version="3.13.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="client\src\app\_services\" />
     <Folder Include="client\ssl\" />
   </ItemGroup>
 
