@@ -3,14 +3,16 @@ using System;
 using DatingApp.Data_Transfer_Object;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatingApp.DataTransferObjects.Migrations
 {
     [DbContext(typeof(DataTransferObject))]
-    partial class DataTransferObjectModelSnapshot : ModelSnapshot
+    [Migration("20210704094846_UserPasswordAdded")]
+    partial class UserPasswordAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
