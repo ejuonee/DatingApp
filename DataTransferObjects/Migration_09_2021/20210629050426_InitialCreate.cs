@@ -15,6 +15,7 @@ namespace DatingApp.DataTransferObjects.Migrations
                     UserName = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
+
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
