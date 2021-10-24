@@ -19,10 +19,10 @@ namespace DatingApp.Controllers
     public class AccountController : ControllerBase
     {
 
-        private readonly DataTransferObject _context;
+        private readonly DataContext _context;
         private readonly ITokenService _tokenService;
 
-        public AccountController(DataTransferObject context, ITokenService tokenService) 
+        public AccountController(DataContext context, ITokenService tokenService) 
         {
              _context = context;
             _tokenService = tokenService;
