@@ -4,8 +4,6 @@ using DatingApp.Entities;
 using DatingApp.Extensions;
 using System.Linq;
 
-
-
 namespace DatingApp.Helpers
 {
     public class AutoMapperProfiles : Profile
@@ -17,7 +15,6 @@ namespace DatingApp.Helpers
                     src.Photos.FirstOrDefault(x => x.IsMain).Url))
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
             CreateMap<Photo, PhotoDto>();
-
         }
     }
 }

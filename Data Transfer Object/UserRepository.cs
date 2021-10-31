@@ -4,14 +4,12 @@ using DatingApp.DTO;
 using DatingApp.Entities;
 using DatingApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DatingApp.Data_Transfer_Object
 {
-   
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
@@ -40,7 +38,7 @@ namespace DatingApp.Data_Transfer_Object
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
-            return await _context.Users.Include(photo=>photo.Photos).FirstOrDefaultAsync(x=>x.UserName==username);
+            return await _context.Users.Include(photo => photo.Photos).FirstOrDefaultAsync(x => x.UserName == username);
         }
 
         public async Task<IEnumerable<AppUser>> GetUsersAsync()
@@ -50,7 +48,7 @@ namespace DatingApp.Data_Transfer_Object
 
         public async Task<bool> SaveAllAsync()
         {
-            return await _context.SaveChangesAsync()>0;
+            return await _context.SaveChangesAsync() > 0;
         }
 
         public void Update(AppUser user)

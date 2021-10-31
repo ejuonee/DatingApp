@@ -27,7 +27,6 @@ namespace DatingApp.MiddleWare
             try
             {
                 await _next(context);
-
             }
             catch (Exception ex)
             {
@@ -42,10 +41,9 @@ namespace DatingApp.MiddleWare
                 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
                 var json = JsonSerializer.Serialize(response, options);
-                   
+
                 await context.Response.WriteAsync(json);
             }
         }
-       
     }
 }
