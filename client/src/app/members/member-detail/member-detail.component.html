@@ -1,1 +1,15 @@
-<p>member-detail works!</p>
+<h1 *ngIf="member">{{member.knownAs}}</h1>
+<div class="row" *ngIf="member">
+    <div class="col-4">
+        <div class="card">
+            <img src="{{member.photoUrl|| './assets/user.png'}}" alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
+            <div class="card-body">
+                <div>
+                    
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

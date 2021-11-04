@@ -18,13 +18,13 @@ export class AppComponent implements OnInit {
 
   }
     ngOnInit() {
-      this.getUsers();
-      /*this.setCurrentUser();*/
+      //this.getUsers();
+      this.setCurrentUser();
   }
 
   setCurrentUser() {
-    const user: User = JSON.parse(localStorage.getItem('user') || '{}');
-    this.accountService.setCurrentUser(user);
+    const user: User = JSON.parse(localStorage.getItem('user'));
+    if (user)this.accountService.setCurrentUser(user);
   }
   getUsers() {
     this.http.get('https://localhost:5001/api/users').subscribe(response => {

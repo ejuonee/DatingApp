@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DatingApp.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class UsersController : BaseApiController
     {
         private readonly IUserRepository _userRepository;
@@ -20,7 +20,7 @@ namespace DatingApp.Controllers
             _mapper = mapper;
         }
 
-     
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
@@ -32,7 +32,7 @@ namespace DatingApp.Controllers
 
         //api/user/id
         [HttpGet("{username}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
             var user = await _userRepository.GetMemberAsync(username);
