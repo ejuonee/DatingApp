@@ -30,7 +30,7 @@
           Welcome {{user.username|titlecase}}
         </a>
         <div class="dropdown-menu" *dropdownMenu>
-          <a class="dropdwon-item">Edit Profile</a>
+          <a routerLink='/member/edit'class="dropdwon-item">Edit Profile</a>
           <div class="dropdown-divider"></div>
           <a class="dropdwon-item" (click)="logout()">Logout</a>
         </div>
