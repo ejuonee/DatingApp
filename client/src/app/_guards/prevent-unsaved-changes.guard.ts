@@ -1,3 +1,4 @@
+import { REFERENCE_PREFIX } from '@angular/compiler/src/render3/view/util';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
