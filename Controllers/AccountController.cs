@@ -4,6 +4,7 @@ using DatingApp.Entities;
 using DatingApp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,7 +52,7 @@ namespace DatingApp.Controllers
             var usernamesmall = data.Username.ToLower();
             //var user = await _context.Users.SingleOrDefaultAsync(username => username.UserName == data.Username);
 
-            var user = await _context.Users.SingleOrDefaultAsync(username => username.UserName == usernamesmall);
+            var user = await _context.Users.Include(p=>p.Photos).SingleOrDefaultAsync(username => username.UserName == usernamesmall);
             if (user == null) return Unauthorized("Invalid Username");
             using var hmac = new HMACSHA512(user.PasswordSalt);
             var computedhash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data.Password));
@@ -64,7 +65,9 @@ namespace DatingApp.Controllers
             return new UserDTO
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                PhotoUrl= user.Photos.FirstOrDefault(x=>x.IsMain)?.Url
+
             };
         }
 
