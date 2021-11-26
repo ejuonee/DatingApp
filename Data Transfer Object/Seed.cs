@@ -1,8 +1,6 @@
 ﻿using DatingApp.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -21,7 +19,6 @@ namespace DatingApp.Data_Transfer_Object
 
             foreach (var user in users)
             {
-                
                 using var hmac = new HMACSHA512();
                 user.UserName = user.UserName.ToLower();
                 user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("password"));

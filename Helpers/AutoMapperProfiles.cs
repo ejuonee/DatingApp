@@ -4,20 +4,19 @@ using DatingApp.Entities;
 using DatingApp.Extensions;
 using System.Linq;
 
-
-
 namespace DatingApp.Helpers
 {
     public class AutoMapperProfiles : Profile
     {
         public AutoMapperProfiles()
         {
-            CreateMap<AppUser, MemberDto>()
-                .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src =>
+            CreateMap<AppUser, MemberDto>().ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src =>
                     src.Photos.FirstOrDefault(x => x.IsMain).Url))
-                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge())).ReverseMap();
             CreateMap<Photo, PhotoDto>();
 
+            CreateMap<MemberUpdateDto,AppUser>().ReverseMap();
+            CreateMap<RegisterDTO, AppUser>().ReverseMap();
         }
     }
 }

@@ -13,6 +13,7 @@ import { AccountService } from '../_services/account.service';
 export class NavComponent implements OnInit {
    
   model: any = {}
+  currentUser$: Observable<User>;
  
 
   constructor(public accountService: AccountService, private router: Router, private toasting: ToastrService) {
@@ -33,9 +34,9 @@ export class NavComponent implements OnInit {
     this.router.navigateByUrl('/');
    
   }
-  //getCurrentUser() {
-  //  this.accountService.currentUser$.subscribe(user => {
+  // getCurrentUser() {
+  //   this.accountService.currentUser$.subscribe(user => {
       
-  //  }, error => { console.log(error) });
-  //}
+  //   }, error => { console.log(error) });
+  // }
 }

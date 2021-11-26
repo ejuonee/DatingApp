@@ -1,12 +1,11 @@
 ﻿using DatingApp.Entities;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace DatingApp.Data_Transfer_Object
 {
     public class DataContext : DbContext
     {
-        public DataContext( DbContextOptions options) : base(options)
+        public DataContext(DbContextOptions options) : base(options)
         {
         }
 
