@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace DatingApp.Data_Transfer_Object
 {
@@ -33,6 +34,19 @@ namespace DatingApp.Data_Transfer_Object
 
             query = query.Where(u => u.UserName != userParams.CurrentUsername);
             query = query.Where(u => u.Gender == userParams.Gender);
+            var minDob = DateTime.Today.AddYears(-userParams.MaxAge-1);
+            var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
+
+            query= query.Where(u=> u.DateOfBirth>=minDob && u.DateOfBirth<=maxDob);
+
+
+            query= userParams.OrderBy switch
+            {
+                "created" => query.OrderByDescending(u => u.DateCreated),
+                // "lastActive" => query.OrderByDescending(u => u.LastActive),
+                // "age" => query.OrderByDescending(u => u.DateOfBirth),
+                _ => query.OrderByDescending(u => u.LastActive)
+            };
             
            return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(_mapper
                 .ConfigurationProvider).AsNoTracking(), 
@@ -62,5 +76,6 @@ namespace DatingApp.Data_Transfer_Object
         {
             _context.Entry(user).State = EntityState.Modified;
         }
+
     }
 }
