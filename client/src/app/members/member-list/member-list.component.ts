@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Member } from 'src/app/_models/member';
 import { Pagination } from 'src/app/_models/pagination';
 import { User } from 'src/app/_models/user';
@@ -20,11 +21,9 @@ export class MemberListComponent implements OnInit {
   user: User;
   genderList = [{value: 'male', display:'Males'},{value:'female', display:'Females'}]
 
-  constructor(private memberService: MembersService, private accountService : AccountService) {
+  constructor(private memberService: MembersService) {
 
-    this.accountService.currentUser$.subscribe(user=>{ this.user=user;
-    this.userParams= new UserParams(user);
-    });
+   this.userParams=this.memberService.getUserParams();
 
    }
 
@@ -33,16 +32,18 @@ export class MemberListComponent implements OnInit {
   }
 
   loadMembers() {
+    this.memberService.setUserParams(this.userParams);
     this.memberService.getMembers(this.userParams).subscribe(response=> {this.members = response.result;
-    this.pagination=response.pagination;});
+    this.pagination=response.pagination});
   }
 resetFilters(){
-  this.userParams= new UserParams(this.user);
+  this.userParams= this.memberService.resetUserParams();
   this.loadMembers();
 }
 
   pageChanged(event: any): void {
     this.userParams.pageNumber=event.page;
+    this.memberService.setUserParams(this.userParams);
     this.loadMembers();
   }
 }

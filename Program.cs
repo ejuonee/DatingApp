@@ -25,7 +25,7 @@ namespace DatingApp
             catch (Exception ex)
             {
                 var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An Error Occured during migration");
+                logger.LogError(ex, "An Error Occurred during migration");
                 throw;
             }
             await host.RunAsync();
