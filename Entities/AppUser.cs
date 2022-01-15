@@ -24,6 +24,10 @@ namespace DatingApp.Entities
         public ICollection<UserLike> LikedByUsers { get; set; }
 
         public ICollection<UserLike> LikedUsers { get; set; }
+
+        public ICollection<Message> MessagesSent { get; set; }
+
+        public ICollection<Message> MessagesReceived { get; set; }
         //public int GetAge()
         //{
         //    return DateOfBirth.CalculateAge();
