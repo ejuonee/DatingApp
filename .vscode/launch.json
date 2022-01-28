@@ -25,7 +25,7 @@
             "request": "launch",
             "reAttach": true,
             "url": "https://localhost:4200",
-            "file": "${workspaceFolder}"
+            "file": "${workspaceFolder}/client"
         },
         {
             "name": ".NET Core Launch (web)",
