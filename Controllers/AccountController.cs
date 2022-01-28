@@ -33,12 +33,12 @@ namespace DatingApp.Controllers
             if (await UserExists(data.Username)) return BadRequest("User already exist");
 
             var user =_mapper.Map<AppUser>(data);
-            using var hmac = new HMACSHA512();
+            // using var hmac = new HMACSHA512();
 
           
                 user.UserName = data.Username.ToLower();
-                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data.Password));
-                user.PasswordSalt = hmac.Key;
+                // user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data.Password));
+                // user.PasswordSalt = hmac.Key;
             
 
             _context.Users.Add(user);
@@ -61,13 +61,13 @@ namespace DatingApp.Controllers
 
             var user = await _context.Users.Include(p=>p.Photos).SingleOrDefaultAsync(username => username.UserName == usernamesmall);
             if (user == null) return Unauthorized("Invalid Username");
-            using var hmac = new HMACSHA512(user.PasswordSalt);
-            var computedhash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data.Password));
+            // using var hmac = new HMACSHA512(user.PasswordSalt);
+            // var computedhash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data.Password));
 
-            for (int i = 0; i < computedhash.Length; i++)
-            {
-                if (computedhash[i] != user.PasswordHash[i]) { return Unauthorized("Invalid Password"); }
-            }
+            // for (int i = 0; i < computedhash.Length; i++)
+            // {
+            //     if (computedhash[i] != user.PasswordHash[i]) { return Unauthorized("Invalid Password"); }
+            // }
 
             return new UserDTO
             {
