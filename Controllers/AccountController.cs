@@ -3,6 +3,7 @@ using DatingApp.Data_Transfer_Object;
 using DatingApp.DTO;
 using DatingApp.Entities;
 using DatingApp.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -16,15 +17,17 @@ namespace DatingApp.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly IMapper _mapper;
 
-        public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService, IMapper mapper)
         {
-            _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
             _tokenService = tokenService;
-            _mapper=mapper;
+            _mapper = mapper;         
         }
 
         [HttpPost("register")]
@@ -34,15 +37,16 @@ namespace DatingApp.Controllers
 
             var user =_mapper.Map<AppUser>(data);
             // using var hmac = new HMACSHA512();
-
-          
-                user.UserName = data.Username.ToLower();
+            user.UserName = data.Username.ToLower();
                 // user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data.Password));
                 // user.PasswordSalt = hmac.Key;
             
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            // _context.Users.Add(user);
+            // await _context.SaveChangesAsync();
+
+            var result = await _userManager.CreateAsync(user, data.Password);
+            if (!result.Succeeded) return BadRequest(result.Errors);
             return new UserDTO
             {
                 Username = user.UserName,
@@ -59,7 +63,7 @@ namespace DatingApp.Controllers
             var usernamesmall = data.Username.ToLower();
             //var user = await _context.Users.SingleOrDefaultAsync(username => username.UserName == data.Username);
 
-            var user = await _context.Users.Include(p=>p.Photos).SingleOrDefaultAsync(username => username.UserName == usernamesmall);
+            var user = await _userManager.Users.Include(p=>p.Photos).SingleOrDefaultAsync(username => username.UserName == usernamesmall);
             if (user == null) return Unauthorized("Invalid Username");
             // using var hmac = new HMACSHA512(user.PasswordSalt);
             // var computedhash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data.Password));
@@ -68,7 +72,9 @@ namespace DatingApp.Controllers
             // {
             //     if (computedhash[i] != user.PasswordHash[i]) { return Unauthorized("Invalid Password"); }
             // }
+            var result = await _signInManager.CheckPasswordSignInAsync(user, data.Password, false);
 
+            if (!result.Succeeded) return Unauthorized("Invalid Password");
             return new UserDTO
             {
                 Username = user.UserName,
@@ -82,7 +88,7 @@ namespace DatingApp.Controllers
 
         private async Task<bool> UserExists(string username)
         {
-            return await _context.Users.AnyAsync(user => user.UserName == username.ToLower());
+            return await _userManager.Users.AnyAsync(user => user.UserName == username.ToLower());
         }
     }
 }
