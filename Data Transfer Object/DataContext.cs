@@ -1,4 +1,5 @@
-﻿using DatingApp.Entities;
+﻿using System.Linq;
+using DatingApp.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,10 @@ namespace DatingApp.Data_Transfer_Object
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+             foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+                {
+                    relationship.DeleteBehavior = DeleteBehavior.NoAction;
+                }
             base.OnModelCreating(builder);
 
             builder.Entity<AppUser>()
