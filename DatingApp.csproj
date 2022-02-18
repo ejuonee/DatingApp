@@ -40,7 +40,6 @@
     <PackageReference Include="SQLitePCLRaw.core" Version="2.1.0-pre20220207221914" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="6.0.2" />
     <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.0.7" />
-    <PackageReference Include="SQL" Version="1.0.5075.31045" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.2" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
