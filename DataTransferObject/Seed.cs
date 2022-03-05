@@ -15,7 +15,7 @@ namespace DatingApp.Data_Transfer_Object
         {
             //  RoleManager<AppRole> roleManager
             if (await userManager.Users.AnyAsync()) return;
-            var userData = await System.IO.File.ReadAllTextAsync("Data Transfer Object/UserSeedData.json");
+            var userData = await System.IO.File.ReadAllTextAsync("DataTransferObject/UserSeedData.json");
             // var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
             var users = JsonConvert.DeserializeObject<List<AppUser>>(userData);
             if (users == null) return;
@@ -24,7 +24,15 @@ namespace DatingApp.Data_Transfer_Object
                 new AppRole{Name = "Member"},
                 new AppRole{Name = "Admin"},
                 new AppRole{Name = "Moderator"},
-                // new AppRole{Name = "VIP"}
+                // new AppRole{Name = "VIP"},
+                // new AppRole{Name = "Chairman"},
+                // new AppRole{Name = "Vice-Chairman"},
+                // new AppRole{Name = "Secretary"},
+                // new AppRole{Name = "Treasurer"},
+                // new AppRole{Name = "Auditor"},
+                // new AppRole{Name = "President"},
+                // new AppRole{Name = "Vice-President"},
+                
             };
 
             foreach (var role in roles)

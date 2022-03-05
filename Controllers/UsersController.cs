@@ -30,7 +30,8 @@ namespace DatingApp.Controllers
             _photoService = photoService;
         }
 
-        [AllowAnonymous]
+        // [Authorize (Roles = "Admin")]
+        // [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
         {
@@ -48,7 +49,7 @@ namespace DatingApp.Controllers
         
         //api/user/id
         [HttpGet("{username}",Name ="GetUser")]
-        [Authorize]
+        // [Authorize (Roles = "Member")]
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
             var user = await _userRepository.GetMemberAsync(username);

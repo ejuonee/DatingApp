@@ -3,69 +3,57 @@ using DatingApp.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
 namespace DatingApp.Data_Transfer_Object
 {
-    public class DataContext : IdentityDbContext<AppUser,AppRole, int, IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
+  public class DataContext : IdentityDbContext<AppUser, AppRole, int,
+        IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>,
+        IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public DataContext(DbContextOptions options) : base(options)
         {
         }
-
-        // public DbSet<AppUser> Users { get; set; }
-        // public DbSet<Photo> Photos { get; set; }
-
         public DbSet<UserLike> Likes { get; set; }
-
-         public DbSet<Message> Messages { get; set; }
-
-
+        public DbSet<Message> Messages { get; set; }
+        // public DbSet<Group> Groups { get; set; }
+        // public DbSet<Connection> Connections { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-             foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-                {
-                    relationship.DeleteBehavior = DeleteBehavior.NoAction;
-                }
             base.OnModelCreating(builder);
-
+            // builder.Entity<Group>()
+            //     .HasMany(x => x.Connections)
+            //     .WithOne()
+            //     .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<AppUser>()
-            .HasMany(ur=>ur.UserRoles)
-            .WithOne(u=>u.User)
-            .HasForeignKey(ur=>ur.UserId)
-            .IsRequired();
-            // .ToTable("Users");
-
-              builder.Entity<AppRole>()
-            .HasMany(ur=>ur.UserRoles)
-            .WithOne(u=>u.Role)
-            .HasForeignKey(ur=>ur.UserId)
-            .IsRequired();
-
+                .HasMany(ur => ur.UserRoles)
+                .WithOne(u => u.User)
+                .HasForeignKey(ur => ur.UserId)
+                .IsRequired();
+            builder.Entity<AppRole>()
+                .HasMany(ur => ur.UserRoles)
+                .WithOne(u => u.Role)
+                .HasForeignKey(ur => ur.RoleId)
+                .IsRequired();
             builder.Entity<UserLike>()
                 .HasKey(k => new { k.SourceUserId, k.LikedUserId });
-
             builder.Entity<UserLike>()
                 .HasOne(s => s.SourceUser)
                 .WithMany(l => l.LikedUsers)
-                .HasForeignKey(u => u.SourceUserId)
+                .HasForeignKey(s => s.SourceUserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
             builder.Entity<UserLike>()
-                .HasOne(u => u.LikedUser)
-                .WithMany(u => u.LikedByUsers)
-                .HasForeignKey(u => u.LikedUserId)
+                .HasOne(s => s.LikedUser)
+                .WithMany(l => l.LikedByUsers)
+                .HasForeignKey(s => s.LikedUserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
             builder.Entity<Message>()
-            .HasOne(u => u.Recipient)
-            .WithMany(m => m.MessagesReceived)
-            .OnDelete(DeleteBehavior.Restrict);
-
+                .HasOne(u => u.Recipient)
+                .WithMany(m => m.MessagesReceived)
+                .OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Message>()
-            .HasOne(u => u.Sender)
-            .WithMany(m => m.MessagesSent)
-            .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(u => u.Sender)
+                .WithMany(m => m.MessagesSent)
+                .OnDelete(DeleteBehavior.Restrict);
+            // builder.ApplyUtcDateTimeConverter();
         }
-    
     }
 }
