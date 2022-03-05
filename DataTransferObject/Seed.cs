@@ -24,14 +24,14 @@ namespace DatingApp.Data_Transfer_Object
                 new AppRole{Name = "Member"},
                 new AppRole{Name = "Admin"},
                 new AppRole{Name = "Moderator"},
-                new AppRole{Name = "VIP"},
-                new AppRole{Name = "Chairman"},
-                new AppRole{Name = "Vice-Chairman"},
-                new AppRole{Name = "Secretary"},
-                new AppRole{Name = "Treasurer"},
-                new AppRole{Name = "Auditor"},
-                new AppRole{Name = "President"},
-                new AppRole{Name = "Vice-President"},
+                // new AppRole{Name = "VIP"},
+                // new AppRole{Name = "Chairman"},
+                // new AppRole{Name = "Vice-Chairman"},
+                // new AppRole{Name = "Secretary"},
+                // new AppRole{Name = "Treasurer"},
+                // new AppRole{Name = "Auditor"},
+                // new AppRole{Name = "President"},
+                // new AppRole{Name = "Vice-President"},
                 
             };
 
