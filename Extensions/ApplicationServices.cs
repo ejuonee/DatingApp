@@ -7,8 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.SqlServer;
-
-
+using DatingApp.SignalR;
 
 namespace DatingApp.Extensions
 {
@@ -16,6 +15,7 @@ namespace DatingApp.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
+            services.AddSingleton<PresenceTracker>();
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ILikesRepository, LikesRepository>();

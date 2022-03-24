@@ -1,5 +1,6 @@
 using DatingApp.Extensions;
 using DatingApp.MiddleWare;
+using DatingApp.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +32,10 @@ namespace DatingApp
             services.AddCors();
             services.AddIdentityServices(_config);
             services.AddAutoMapper(typeof(Startup));
+            services.AddSignalR();
+            services.AddHealthChecks();
+            // services.AddHttpClient();
+            // services.AddSoapExceptionTransformer((ex) => ex.Message);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +44,11 @@ namespace DatingApp
             app.UseMiddleware<ExceptionMiddleware>();
             if (env.IsDevelopment())
             {
+                // app.UseSoapEndpoint<>();
+        //         app.UseSoapEndpoint<SimpleAuthenticationWebService>(
+        // "/SimpleAuthWebService/SimpleAuth.asmx",
+        // new BasicHttpBinding(),
+        // SoapSerializer.XmlSerializer);
                 //app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DatingApp v1"));
@@ -55,6 +65,8 @@ namespace DatingApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<PresenceHub>("hubs/presence");
+                endpoints.MapHub<MessageHub>("hubs/message");
             });
         }
     }
