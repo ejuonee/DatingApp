@@ -10,7 +10,7 @@ namespace DatingApp.Interfaces
     {
         void Update(AppUser user);
 
-        Task<bool> SaveAllAsync();
+        // Task<bool> SaveAllAsync();
 
         Task<IEnumerable<AppUser>> GetUsersAsync();
 
@@ -20,6 +20,7 @@ namespace DatingApp.Interfaces
 
         Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
 
+        Task<string> GetUserGender(string username);
         Task<MemberDto> GetMemberAsync(string username);
     }
 }

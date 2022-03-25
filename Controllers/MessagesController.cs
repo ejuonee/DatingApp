@@ -20,17 +20,22 @@ namespace DatingApp.Controllers
     public class MessagesController : BaseApiController
     {
         private readonly ILogger<MessagesController> _logger;
-        private readonly  IMessageRepository _messageRepository;
-        private readonly  IUserRepository _userRepository;
+        // private readonly  IMessageRepository _messageRepository;
+        // private readonly  IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly IMapper _mapper;
 
-        public MessagesController(ILogger<MessagesController> logger, IMessageRepository messageRepository, IUserRepository userRepository, IMapper mapper)
+        public MessagesController(
+            IUnitOfWork unitOfWork,IMapper mapper,ILogger<MessagesController> logger)
+            
+            /* ILogger<MessagesController> logger, IMessageRepository messageRepository, IUserRepository userRepository, IMapper mapper */
         {
             _logger = logger;
-            _messageRepository = messageRepository;
-            _userRepository = userRepository;
-            _mapper = mapper;
+            /* _messageRepository = messageRepository;
+            _userRepository = userRepository; */
+            _mapper = mapper; 
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -51,8 +56,8 @@ namespace DatingApp.Controllers
             //     return BadRequest("You cannot send a message to yourself");
             // }
 
-            var sender = await _userRepository.GetUserByUsernameAsync(username);
-            var recipient = await _userRepository.GetUserByUsernameAsync(createMessageDto.RecipientUsername);
+            var sender = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
+            var recipient = await _unitOfWork.UserRepository.GetUserByUsernameAsync(createMessageDto.RecipientUsername);
 
             if (sender == null)
             {
@@ -71,9 +76,9 @@ namespace DatingApp.Controllers
                 RecipientUsername = recipient.UserName,
                 Content = createMessageDto.Content,
             };
-             _messageRepository.AddMessage(message);
+             _unitOfWork.MessageRepository.AddMessage(message);
 
-            if (await _messageRepository.SaveAllAsync())
+            if (await _unitOfWork.Complete())
             {
                 return Ok(_mapper.Map<MessageDto>(message));
             }
@@ -87,7 +92,7 @@ namespace DatingApp.Controllers
         {
 
             messageParams.Username = User.GetUserName();
-            var messages = await _messageRepository.GetMessagesForUser(messageParams);
+            var messages = await _unitOfWork.MessageRepository.GetMessagesForUser(messageParams);
 
             Response.AddPaginationHeader(messages.CurrentPage, messages.PageSize, messages.TotalCount, messages.TotalPages);
 
@@ -96,25 +101,25 @@ namespace DatingApp.Controllers
 
         }
 
-        [HttpGet("thread/{username}")]
+        // [HttpGet("thread/{username}")]
 
-        public async Task <ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username){
+        // public async Task <ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username){
 
-            var currentUsername = User.GetUserName();
+        //     var currentUsername = User.GetUserName();
 
-            return Ok(await _messageRepository.GetMessagesThread(currentUsername, username));
+        //     return Ok(await _messageRepository.GetMessagesThread(currentUsername, username));
 
-        }
-            // public IActionResult Index()
-        // {
-        //     return View();
         // }
+        //     // public IActionResult Index()
+        // // {
+        // //     return View();
+        // // }
 
-        // [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        // public IActionResult Error()
-        // {
-        //     return View("Error!");
-        // }
+        // // [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        // // public IActionResult Error()
+        // // {
+        // //     return View("Error!");
+        // // }
 
         [HttpDelete("{id}")]
 
@@ -122,7 +127,7 @@ namespace DatingApp.Controllers
 
         {
             var username = User.GetUserName();
-            var message = await _messageRepository.GetMessage(id);
+            var message = await _unitOfWork.MessageRepository.GetMessage(id);
             if (message.Sender.UserName != username && message.Recipient.UserName != username)
             {
                 return Unauthorized();
@@ -138,9 +143,9 @@ namespace DatingApp.Controllers
 
             if (message.SenderDeleted && message.RecipientDeleted)
             {
-                _messageRepository.Delete(message);
+                _unitOfWork.MessageRepository.Delete(message);
             }
-            if (await _messageRepository.SaveAllAsync())
+            if (await _unitOfWork.Complete())
             {
                 return NoContent();
             }

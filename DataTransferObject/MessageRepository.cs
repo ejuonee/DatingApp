@@ -63,25 +63,57 @@ namespace DatingApp.Data_Transfer_Object
 
     public async Task<PagedList<MessageDto>> GetMessagesForUser( MessageParams messageParams)
         {
-            var query = _context.Messages.OrderByDescending(m=>m.MessageSent).AsQueryable();
+        //     var query = _context.Messages.OrderByDescending(m=>m.MessageSent).AsQueryable();
+           
+        //    query = messageParams.Container switch
+        //     {
+        //         "Inbox" => query.Where(u => u.Recipient.UserName == messageParams.Username && u.RecipientDeleted == false),
+        //         "Outbox" => query.Where(m => m.Sender.UserName == messageParams.Username && m.SenderDeleted == false),
+        //         _ => query.Where(m => m.Recipient.UserName == messageParams.Username && m.RecipientDeleted && m.DateRead == null),
+        //     };
+
+        //     var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
+        //     return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
+
+        var query = _context.Messages.OrderByDescending(m=>m.MessageSent).
+        ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
+        .AsQueryable();
            
            query = messageParams.Container switch
             {
-                "Inbox" => query.Where(u => u.Recipient.UserName == messageParams.Username && u.RecipientDeleted == false),
-                "Outbox" => query.Where(m => m.Sender.UserName == messageParams.Username && m.SenderDeleted == false),
-                _ => query.Where(m => m.Recipient.UserName == messageParams.Username && m.RecipientDeleted && m.DateRead == null),
+                "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false),
+                "Outbox" => query.Where(m => m.SenderUsername == messageParams.Username && m.SenderDeleted == false),
+                _ => query.Where(m => m.RecipientUsername == messageParams.Username && m.RecipientDeleted && m.DateRead == null),
             };
 
-            var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
-            return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
+           
+            return await PagedList<MessageDto>.CreateAsync(query, messageParams.PageNumber, messageParams.PageSize);
         }
 
         public async Task<IEnumerable<MessageDto>> GetMessagesThread(string currentUsername, string recipientUsername)
         {
-            var messages = await _context.Messages.Include(u=>u.Sender).ThenInclude(p=>p.Photos).Include(u=>u.Recipient).ThenInclude(p=>p.Photos)
-                .Where( m => m.Recipient.UserName == currentUsername && m.Sender.UserName == recipientUsername || m.Recipient.UserName == recipientUsername && m.Sender.UserName==currentUsername && m.SenderDeleted ==false).OrderBy(m=>m.MessageSent).ToListAsync();
+        //     var messages = await _context.Messages.Include(u=>u.Sender).ThenInclude(p=>p.Photos).Include(u=>u.Recipient).ThenInclude(p=>p.Photos)
+        //         .Where( m => m.Recipient.UserName == currentUsername && m.Sender.UserName == recipientUsername || m.Recipient.UserName == recipientUsername && m.Sender.UserName==currentUsername && m.SenderDeleted ==false).OrderBy(m=>m.MessageSent).ToListAsync();
 
-                var unreadMessages = messages.Where(m => m.Recipient.UserName == currentUsername && m.DateRead == null).ToList();
+        //         var unreadMessages = messages.Where(m => m.Recipient.UserName == currentUsername && m.DateRead == null).ToList();
+
+        //         if (unreadMessages.Any())
+        //         {
+        //             // unreadMessages.ForEach(m => m.DateRead = DateTime.Now);
+        //             // _context.Messages.UpdateRange(unreadMessages);
+
+        //             foreach (var message in unreadMessages)
+        //             {
+        //                 message.DateRead = DateTime.UtcNow;
+        //             }
+        //             await _context.SaveChangesAsync();
+        //         }
+
+        //   return _mapper.Map<IEnumerable<MessageDto>>(messages);
+        var messages = await _context.Messages
+                .Where( m => m.Recipient.UserName == currentUsername && m.Sender.UserName == recipientUsername || m.Recipient.UserName == recipientUsername && m.Sender.UserName==currentUsername && m.SenderDeleted ==false).OrderBy(m=>m.MessageSent)
+                .ProjectTo<MessageDto>(_mapper.ConfigurationProvider).ToListAsync();
+                var unreadMessages = messages.Where(m => m.RecipientUsername == currentUsername && m.DateRead == null).ToList();
 
                 if (unreadMessages.Any())
                 {
@@ -95,7 +127,7 @@ namespace DatingApp.Data_Transfer_Object
                     await _context.SaveChangesAsync();
                 }
 
-          return _mapper.Map<IEnumerable<MessageDto>>(messages);
+          return messages;
         }
 
     public void RemoveConnection(Connection connection)
@@ -103,9 +135,9 @@ namespace DatingApp.Data_Transfer_Object
         _context.Connections.Remove(connection);
     }
 
-    public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
-        }
+    // public async Task<bool> SaveAllAsync()
+    //     {
+    //         return await _context.SaveChangesAsync() > 0;
+    //     }
     }
 }
