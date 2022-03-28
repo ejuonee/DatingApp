@@ -5,17 +5,19 @@ using System.Threading.Tasks;
 
 namespace DatingApp.Interfaces
 {
-    public interface IUnitOfWork
-    {
-        IUserRepository UserRepository { get; }
-        IMessageRepository MessageRepository { get; }
+  public interface IUnitOfWork
+  {
+    IUserRepository UserRepository { get; }
+    IMessageRepository MessageRepository { get; }
 
-        ILikesRepository LikesRepository { get; }
+    ILikesRepository LikesRepository { get; }
 
-        Task<bool> Complete();
+    IPhotoRepository PhotoRepository { get; }
 
-        bool HasChanges();
+    Task<bool> Complete();
 
-        
-    }
+    bool HasChanges();
+
+
+  }
 }

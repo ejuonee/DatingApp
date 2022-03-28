@@ -66,7 +66,8 @@ namespace DatingApp.Controllers
         // [Authorize (Roles = "Member")]
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
-            var user = await _unitOfWork.UserRepository.GetMemberAsync(username);
+            var currentUsername = User.GetUserName();
+            var user = await _unitOfWork.UserRepository.GetMemberAsync(username,isCurrentUser:currentUsername==username);
 
             return Ok(_mapper.Map<MemberDto>(user));
         }
@@ -103,10 +104,10 @@ namespace DatingApp.Controllers
                 PublicId = result.PublicId
             };
 
-            if (user.Photos.Count == 0)
-            {
-                photo.IsMain = true;
-            }
+            // if (user.Photos.Count == 0)
+            // {
+            //     photo.IsMain = false;
+            // }
 
             user.Photos.Add(photo);
 

@@ -12,26 +12,29 @@ using DatingApp.DataTransferObject;
 
 namespace DatingApp.Extensions
 {
-    public static class ApplicationServices
+  public static class ApplicationServices
+  {
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
-        {
-            services.AddSingleton<PresenceTracker>();
-            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
-            services.AddScoped<ITokenService, TokenService>();
+      services.AddSingleton<PresenceTracker>();
+      services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+      services.AddScoped<ITokenService, TokenService>();
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            // services.AddScoped<ILikesRepository, LikesRepository>();
-            // services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IPhotoService, PhotoService>();
-            // services.AddScoped<IMessageRepository, MessageRepository>();
-            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
-            services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfiles)));
-            services.AddScoped<LogUserActivity>();
-            services.AddDbContext<DataContext>(options => { options.UseSqlite(config.GetConnectionString("DefaultConnection")); });
-            // services.AddDbContext<DataContext>(options => { options.UseSqlServer(config.GetConnectionString("DefaultConnection")); });
 
-            return services;
-        }
+      // services.AddScoped<ILikesRepository, LikesRepository>();
+      // services.AddScoped<IUserRepository, UserRepository>();
+      services.AddScoped<IPhotoService, PhotoService>();
+      services.AddScoped<IUnitOfWork, UnitOfWork>();
+      services.AddScoped<IPhotoRepository, PhotoRepository>();
+      // services.AddScoped<IMessageRepository, MessageRepository>();
+      services.AddScoped<LogUserActivity>();
+      services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+      services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfiles)));
+
+      services.AddDbContext<DataContext>(options => { options.UseSqlite(config.GetConnectionString("DefaultConnection")); });
+      // services.AddDbContext<DataContext>(options => { options.UseSqlServer(config.GetConnectionString("DefaultConnection")); });
+
+      return services;
     }
+  }
 }

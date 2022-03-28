@@ -11,5 +11,6 @@ namespace DatingApp.Entities
         public int AppUserId { get; set; }
         public bool IsMain { get; set; }
         public string PublicId { get; set; }
+        public bool IsApproved { get; set; }
     }
 }

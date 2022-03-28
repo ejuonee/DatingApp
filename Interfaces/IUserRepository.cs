@@ -1,6 +1,7 @@
 ﻿using DatingApp.DTO;
 using DatingApp.Entities;
 using DatingApp.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,5 +23,8 @@ namespace DatingApp.Interfaces
 
         Task<string> GetUserGender(string username);
         Task<MemberDto> GetMemberAsync(string username);
+
+        Task<AppUser> GetUserByPhotoId(int photoId);
+         Task<MemberDto> GetMemberAsync(string username, bool isCurrentUser);
     }
 }
